@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
+    <UserSecretsId>aspnet-dotnet_core_identity_sandbox-AE49E8F9-462C-44A5-9EE8-77D226187D91</UserSecretsId>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <RootNamespace>dotnet_core_identity_sandbox</RootNamespace>
   </PropertyGroup>
