@@ -52,6 +52,7 @@ namespace dotnet_core_identity_sandbox
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+            app.UseAuthentication();
 
             app.UseMvc();
         }
