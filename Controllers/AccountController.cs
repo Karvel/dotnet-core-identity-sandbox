@@ -28,7 +28,7 @@ namespace dotnet_core_identity_sandbox.Controllers
             _passwordHasher = passwordHasher;
         }
 
-        [HttpPost]
+        [HttpPost("register")]
         public async Task<IActionResult> Create([FromBody] Login credentials)
         {
             if (!ModelState.IsValid)
