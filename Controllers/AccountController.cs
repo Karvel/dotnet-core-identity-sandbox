@@ -53,7 +53,7 @@ namespace dotnet_core_identity_sandbox.Controllers
                     var callbackUrl = Url.Page(
                         "/Account/ConfirmEmail",
                         pageHandler: null,
-                        values: new { userId = user.Id, code = code },
+                        values: new { area = "Identity", userId = user.Id, code = code },
                         protocol: Request.Scheme);
 
                     await _emailSender.SendEmailAsync(credentials.Email, "Confirm your email",
@@ -117,7 +117,7 @@ namespace dotnet_core_identity_sandbox.Controllers
                 var callbackUrl = Url.Page(
                     "/Account/ResetPassword",
                     pageHandler: null,
-                    values: new { code },
+                    values: new { area = "Identity", code },
                     protocol: Request.Scheme);
 
                 await _emailSender.SendEmailAsync(
