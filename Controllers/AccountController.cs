@@ -1,15 +1,21 @@
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using System.Text.Encodings.Web;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 using dotnet_core_identity_sandbox.Areas.Identity.Data;
 using dotnet_core_identity_sandbox.Models;
+using Microsoft.IdentityModel.Tokens;
 
 namespace dotnet_core_identity_sandbox.Controllers
 {
@@ -22,19 +28,22 @@ namespace dotnet_core_identity_sandbox.Controllers
         private readonly ILogger<AccountController> _logger;
         private readonly IPasswordHasher<ApplicationUser> _passwordHasher;
         private readonly IEmailSender _emailSender;
+        private readonly IConfiguration _configuration;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<AccountController> logger,
             IPasswordHasher<ApplicationUser> passwordHasher,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IConfiguration configuration)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _passwordHasher = passwordHasher;
             _emailSender = emailSender;
+            _configuration = configuration;
         }
 
         [HttpPost("register")]
@@ -83,7 +92,8 @@ namespace dotnet_core_identity_sandbox.Controllers
                 var result = await _signInManager.PasswordSignInAsync(credentials.Email, credentials.Password, isPersistent: false, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    return Ok();
+                    var appUser = _userManager.Users.SingleOrDefault(r => r.Email == credentials.Email);
+                    return Ok(GenerateJwtToken(credentials.Email, appUser));
                 }
                 if (result.IsLockedOut)
                 {
