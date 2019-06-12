@@ -23,6 +23,7 @@ namespace dotnet_core_identity_sandbox.Areas.Identity
                 {
                     config.SignIn.RequireConfirmedEmail = true;
                 })
+                    .AddRoles<IdentityRole>()
                     .AddEntityFrameworkStores<IdentityDataContext>();
             });
         }
