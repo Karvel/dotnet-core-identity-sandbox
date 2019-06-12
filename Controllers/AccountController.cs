@@ -17,17 +17,17 @@ namespace dotnet_core_identity_sandbox.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly UserManager<UserEntity> _userManager;
-        private readonly SignInManager<UserEntity> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<AccountController> _logger;
-        private readonly IPasswordHasher<UserEntity> _passwordHasher;
+        private readonly IPasswordHasher<ApplicationUser> _passwordHasher;
         private readonly IEmailSender _emailSender;
 
         public AccountController(
-            UserManager<UserEntity> userManager,
-            SignInManager<UserEntity> signInManager,
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
             ILogger<AccountController> logger,
-            IPasswordHasher<UserEntity> passwordHasher,
+            IPasswordHasher<ApplicationUser> passwordHasher,
             IEmailSender emailSender)
         {
             _userManager = userManager;
@@ -42,7 +42,7 @@ namespace dotnet_core_identity_sandbox.Controllers
         {  
             if (ModelState.IsValid)
             {
-                var user = new UserEntity { UserName = credentials.Email, Email = credentials.Email };
+                var user = new ApplicationUser { UserName = credentials.Email, Email = credentials.Email };
                 var result =  await _userManager.CreateAsync(user, credentials.Password);
                 
                 if (result.Succeeded)

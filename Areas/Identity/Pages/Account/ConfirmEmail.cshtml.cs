@@ -13,9 +13,9 @@ namespace dotnet_core_identity_sandbox.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class ConfirmEmailModel : PageModel
     {
-        private readonly UserManager<UserEntity> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ConfirmEmailModel(UserManager<UserEntity> userManager)
+        public ConfirmEmailModel(UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
         }

@@ -19,7 +19,7 @@ namespace dotnet_core_identity_sandbox.Areas.Identity
                     options.UseSqlServer(
                         context.Configuration.GetConnectionString("IdentityDataContextConnection")));
 
-                services.AddDefaultIdentity<UserEntity>(config =>
+                services.AddDefaultIdentity<ApplicationUser>(config =>
                 {
                     config.SignIn.RequireConfirmedEmail = true;
                 })

@@ -12,12 +12,12 @@ namespace dotnet_core_identity_sandbox.Areas.Identity.Pages.Account.Manage
 {
     public class ExternalLoginsModel : PageModel
     {
-        private readonly UserManager<UserEntity> _userManager;
-        private readonly SignInManager<UserEntity> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
         public ExternalLoginsModel(
-            UserManager<UserEntity> userManager,
-            SignInManager<UserEntity> signInManager)
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;

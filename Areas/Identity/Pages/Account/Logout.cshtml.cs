@@ -14,10 +14,10 @@ namespace dotnet_core_identity_sandbox.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class LogoutModel : PageModel
     {
-        private readonly SignInManager<UserEntity> _signInManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<LogoutModel> _logger;
 
-        public LogoutModel(SignInManager<UserEntity> signInManager, ILogger<LogoutModel> logger)
+        public LogoutModel(SignInManager<ApplicationUser> signInManager, ILogger<LogoutModel> logger)
         {
             _signInManager = signInManager;
             _logger = logger;

@@ -16,13 +16,13 @@ namespace dotnet_core_identity_sandbox.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class ExternalLoginModel : PageModel
     {
-        private readonly SignInManager<UserEntity> _signInManager;
-        private readonly UserManager<UserEntity> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<ExternalLoginModel> _logger;
 
         public ExternalLoginModel(
-            SignInManager<UserEntity> signInManager,
-            UserManager<UserEntity> userManager,
+            SignInManager<ApplicationUser> signInManager,
+            UserManager<ApplicationUser> userManager,
             ILogger<ExternalLoginModel> logger)
         {
             _signInManager = signInManager;
@@ -115,7 +115,7 @@ namespace dotnet_core_identity_sandbox.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                var user = new UserEntity { UserName = Input.Email, Email = Input.Email };
+                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email };
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
