@@ -19,6 +19,7 @@ using Microsoft.IdentityModel.Tokens;
 using dotnet_core_identity_sandbox.Areas.Identity.Data;
 
 using WebPWrecover.Services;
+using Models.Managers;
 
 namespace dotnet_core_identity_sandbox
 {
@@ -62,6 +63,7 @@ namespace dotnet_core_identity_sandbox
 					};
 				});
             services.Configure<AuthMessageSenderOptions>(Configuration);
+			services.AddScoped<AccountManager>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
