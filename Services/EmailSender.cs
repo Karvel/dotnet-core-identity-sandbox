@@ -4,7 +4,7 @@ using SendGrid;
 using SendGrid.Helpers.Mail;
 using System.Threading.Tasks;
 
-namespace WebPWrecover.Services
+namespace dotnet_core_identity_sandbox.Services
 {
     public class EmailSender : IEmailSender
     {
