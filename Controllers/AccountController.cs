@@ -67,16 +67,15 @@ namespace dotnet_core_identity_sandbox.Controllers
                         await _userManager.AddToRoleAsync(user, "Consumer");
                     }
 
-                    string code = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
-                    string callbackUrl = Url.Page(
-                        "/Account/ConfirmEmail",
-                        pageHandler: null,
-                        values: new { area = "Identity", userId = newUser.Id, code = code },
-                        protocol: Request.Scheme);
-
-                    await _emailSender.SendEmailAsync(credentials.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-                    return Ok();
+                    SessionViewModel response = new SessionViewModel {
+                        User = new UserViewModel{
+                            FirstName = user.FirstName,
+                            LastName = user.LastName,
+                            Email = user.Email,
+                        },
+                        Token = await _accountManager.GenerateJwtToken(credentials.Email, user),
+                    };
+                    return Ok(response);
                 }
                 foreach (IdentityError error in result.Errors)
                 {
