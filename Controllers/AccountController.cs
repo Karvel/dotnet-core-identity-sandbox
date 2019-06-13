@@ -41,7 +41,7 @@ namespace dotnet_core_identity_sandbox.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] Login credentials)
+        public async Task<IActionResult> Register([FromBody] Register credentials)
         {  
             if (ModelState.IsValid)
             {
