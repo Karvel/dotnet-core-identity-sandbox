@@ -2,7 +2,6 @@ using System;
 using dotnet_core_identity_sandbox.Areas.Identity.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,10 +18,7 @@ namespace dotnet_core_identity_sandbox.Areas.Identity
                     options.UseSqlServer(
                         context.Configuration.GetConnectionString("IdentityDataContextConnection")));
 
-                services.AddDefaultIdentity<ApplicationUser>(config =>
-                {
-                    config.SignIn.RequireConfirmedEmail = true;
-                })
+                services.AddDefaultIdentity<ApplicationUser>()
                     .AddRoles<IdentityRole>()
                     .AddEntityFrameworkStores<IdentityDataContext>();
             });
