@@ -101,10 +101,15 @@ namespace dotnet_core_identity_sandbox.Controllers
                 if (result.Succeeded)
                 {
                     ApplicationUser appUser = _userManager.Users.SingleOrDefault(user => user.Email == credentials.Email);
-                    JWTToken jwt = new JWTToken {
+                    SessionViewModel response = new SessionViewModel {
+                        User = new UserViewModel{
+                            FirstName = appUser.FirstName,
+                            LastName = appUser.LastName,
+                            Email = appUser.Email,
+                        },
                         Token = await _accountManager.GenerateJwtToken(credentials.Email, appUser),
                     };
-                    return Ok(jwt);
+                    return Ok(response);
                 }
                 if (result.IsLockedOut)
                 {
