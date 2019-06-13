@@ -71,7 +71,6 @@ namespace dotnet_core_identity_sandbox.Controllers
 
                     await _emailSender.SendEmailAsync(credentials.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
                     return Ok();
                 }
                 foreach (IdentityError error in result.Errors)
@@ -141,7 +140,6 @@ namespace dotnet_core_identity_sandbox.Controllers
                     credentials.Email,
                     "Reset Password",
                     $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
                 return Ok();
             }
 
