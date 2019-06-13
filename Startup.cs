@@ -1,13 +1,10 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -15,9 +12,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
-
 using dotnet_core_identity_sandbox.Areas.Identity.Data;
-
+using dotnet_core_identity_sandbox.Services;
 using Models.Managers;
 
 namespace dotnet_core_identity_sandbox
@@ -63,7 +59,6 @@ namespace dotnet_core_identity_sandbox
 				});
             services.Configure<AuthMessageSenderOptions>(Configuration);
 			services.AddScoped<AccountManager>();
-
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
@@ -85,7 +80,6 @@ namespace dotnet_core_identity_sandbox
             app.UseStaticFiles();
             app.UseAuthentication();
             CreateUserRoles(serviceProvider).Wait();
-
             app.UseMvc();
         }
 
@@ -98,9 +92,9 @@ namespace dotnet_core_identity_sandbox
 			string[] roleNames = { "Administrator", "Consumer" };
 			IdentityResult roleResult;
 
-			foreach (var roleName in roleNames)
+			foreach (string roleName in roleNames)
 			{
-				var roleExist = await RoleManager.RoleExistsAsync(roleName);
+				Boolean roleExist = await RoleManager.RoleExistsAsync(roleName);
 				if (!roleExist)
 				{
 					//create the roles and seed them to the database: Question 1
@@ -109,7 +103,7 @@ namespace dotnet_core_identity_sandbox
 			}
 
 			//Here you could create a super user who will maintain the web app
-			var poweruser = new ApplicationUser
+			var superUser = new ApplicationUser
 			{
 				UserName = Configuration["AppSettings:UserName"],
 				Email = Configuration["AppSettings:UserEmail"],
@@ -117,15 +111,15 @@ namespace dotnet_core_identity_sandbox
 
 			//Ensure you have these values in your appsettings.json file
 			string userPWD = Configuration["AppSettings:UserPassword"];
-			var _user = await UserManager.FindByEmailAsync(Configuration["AppSettings:AdminUserEmail"]);
+			ApplicationUser _user = await UserManager.FindByEmailAsync(Configuration["AppSettings:AdminUserEmail"]);
 
 			if (_user == null)
 			{
-				var createPowerUser = await UserManager.CreateAsync(poweruser, userPWD);
-				if (createPowerUser.Succeeded)
+				IdentityResult createSuperUser = await UserManager.CreateAsync(superUser, userPWD);
+				if (createSuperUser.Succeeded)
 				{
 					//here we tie the new user to the role
-					await UserManager.AddToRoleAsync(poweruser, "Administrator");
+					await UserManager.AddToRoleAsync(superUser, "Administrator");
 				}
 			}
 		}
