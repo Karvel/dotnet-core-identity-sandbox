@@ -58,6 +58,16 @@ namespace dotnet_core_identity_sandbox.Controllers
                 {
                     _logger.LogInformation("User created a new account with password.");
 
+                    var user =  await _userManager.FindByEmailAsync(credentials.Email);
+                    
+                    if (user.Email != null)
+                    {
+                        _logger.LogInformation("Setting User role to Consumer");
+
+                        // TODO: Replace magic string
+                        await _userManager.AddToRoleAsync(user, "Consumer");
+                    }
+
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
                     var callbackUrl = Url.Page(
                         "/Account/ConfirmEmail",
