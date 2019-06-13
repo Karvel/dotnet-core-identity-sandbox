@@ -80,7 +80,7 @@ namespace dotnet_core_identity_sandbox.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] Login credentials)
+        public async Task<ActionResult<JWTToken>> Login([FromBody] Login credentials)
         {
 			if (credentials == null)
 			{
@@ -93,7 +93,10 @@ namespace dotnet_core_identity_sandbox.Controllers
                 if (result.Succeeded)
                 {
                     var appUser = _userManager.Users.SingleOrDefault(r => r.Email == credentials.Email);
-                    return Ok(GenerateJwtToken(credentials.Email, appUser));
+                    JWTToken jwt = new JWTToken {
+                        Token = GenerateJwtToken(credentials.Email, appUser),
+                    };
+                    return Ok(jwt);
                 }
                 if (result.IsLockedOut)
                 {
