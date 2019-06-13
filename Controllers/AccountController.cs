@@ -45,7 +45,12 @@ namespace dotnet_core_identity_sandbox.Controllers
         {  
             if (ModelState.IsValid)
             {
-                var newUser = new ApplicationUser { UserName = credentials.Email, Email = credentials.Email };
+                var newUser = new ApplicationUser {
+                    FirstName = credentials.FirstName,
+                    LastName = credentials.LastName,
+                    UserName = credentials.Email,
+                    Email = credentials.Email,
+                };
                 IdentityResult result =  await _userManager.CreateAsync(newUser, credentials.Password);
                 
                 if (result.Succeeded)
