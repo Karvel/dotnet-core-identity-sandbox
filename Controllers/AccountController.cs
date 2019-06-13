@@ -25,12 +25,14 @@ namespace dotnet_core_identity_sandbox.Controllers
         private readonly IConfiguration _configuration;
 
         public AccountController(
+            AccountManager accountManager,
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<AccountController> logger,
             IEmailSender emailSender,
             IConfiguration configuration)
         {
+            _accountManager = accountManager;
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
@@ -94,7 +96,7 @@ namespace dotnet_core_identity_sandbox.Controllers
                 var result = await _signInManager.PasswordSignInAsync(credentials.Email, credentials.Password, isPersistent: false, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    ApplicationUser appUser = _userManager.Users.SingleOrDefault(r => r.Email == credentials.Email);
+                    ApplicationUser appUser = _userManager.Users.SingleOrDefault(user => user.Email == credentials.Email);
                     JWTToken jwt = new JWTToken {
                         Token = await _accountManager.GenerateJwtToken(credentials.Email, appUser),
                     };
