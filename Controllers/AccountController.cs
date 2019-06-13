@@ -15,7 +15,7 @@ using Microsoft.Extensions.Logging;
 
 using dotnet_core_identity_sandbox.Areas.Identity.Data;
 using dotnet_core_identity_sandbox.Models;
-using Microsoft.IdentityModel.Tokens;
+using Models.Managers;
 
 namespace dotnet_core_identity_sandbox.Controllers
 {
@@ -23,6 +23,7 @@ namespace dotnet_core_identity_sandbox.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
+        private readonly AccountManager _accountManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<AccountController> _logger;
@@ -104,7 +105,7 @@ namespace dotnet_core_identity_sandbox.Controllers
                 {
                     ApplicationUser appUser = _userManager.Users.SingleOrDefault(r => r.Email == credentials.Email);
                     JWTToken jwt = new JWTToken {
-                        Token = await GenerateJwtToken(credentials.Email, appUser),
+                        Token = await _accountManager.GenerateJwtToken(credentials.Email, appUser),
                     };
                     return Ok(jwt);
                 }
@@ -152,35 +153,6 @@ namespace dotnet_core_identity_sandbox.Controllers
             }
 
             return BadRequest("Password reset failed.");
-        }
-
-        private async Task<object> GenerateJwtToken(string email, IdentityUser user)
-        {
-            IList<string> userRoles = await _userManager.GetRolesAsync((ApplicationUser)user);
-            var claims = new List<Claim>
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.NameIdentifier, user.Id),
-            };
-            foreach (string role in userRoles)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, role));
-            }
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtKey"]));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            DateTime expires = DateTime.Now.AddDays(Convert.ToDouble(_configuration["JwtExpireDays"]));
-
-            var token = new JwtSecurityToken(
-                _configuration["JwtIssuer"],
-                _configuration["JwtIssuer"],
-                claims,
-                expires: expires,
-                signingCredentials: creds
-            );
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }
