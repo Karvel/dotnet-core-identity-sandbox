@@ -41,7 +41,7 @@ namespace dotnet_core_identity_sandbox.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] Register credentials)
+        public async Task<ActionResult<SessionViewModel>> Register([FromBody] Register credentials)
         {  
             if (ModelState.IsValid)
             {
@@ -88,7 +88,7 @@ namespace dotnet_core_identity_sandbox.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<JWTToken>> Login([FromBody] Login credentials)
+        public async Task<ActionResult<SessionViewModel>> Login([FromBody] Login credentials)
         {
 			if (credentials == null)
 			{
