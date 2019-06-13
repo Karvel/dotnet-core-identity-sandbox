@@ -110,7 +110,7 @@ namespace dotnet_core_identity_sandbox.Controllers
                 }
                 if (result.IsLockedOut)
                 {
-                    return BadRequest("Invalid login attempt.");
+                    return BadRequest("Account is locked.");
                 }
                 else
                 {
