@@ -52,13 +52,13 @@ namespace dotnet_core_identity_sandbox.Controllers
             if (ModelState.IsValid)
             {
                 var newUser = new ApplicationUser { UserName = credentials.Email, Email = credentials.Email };
-                var result =  await _userManager.CreateAsync(newUser, credentials.Password);
+                IdentityResult result =  await _userManager.CreateAsync(newUser, credentials.Password);
                 
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
 
-                    var user =  await _userManager.FindByEmailAsync(credentials.Email);
+                    ApplicationUser user =  await _userManager.FindByEmailAsync(credentials.Email);
                     
                     if (user.Email != null)
                     {
@@ -68,8 +68,8 @@ namespace dotnet_core_identity_sandbox.Controllers
                         await _userManager.AddToRoleAsync(user, "Consumer");
                     }
 
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
-                    var callbackUrl = Url.Page(
+                    string code = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
+                    string callbackUrl = Url.Page(
                         "/Account/ConfirmEmail",
                         pageHandler: null,
                         values: new { area = "Identity", userId = newUser.Id, code = code },
@@ -80,7 +80,7 @@ namespace dotnet_core_identity_sandbox.Controllers
 
                     return Ok();
                 }
-                foreach (var error in result.Errors)
+                foreach (IdentityError error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
@@ -102,7 +102,7 @@ namespace dotnet_core_identity_sandbox.Controllers
                 var result = await _signInManager.PasswordSignInAsync(credentials.Email, credentials.Password, isPersistent: false, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    var appUser = _userManager.Users.SingleOrDefault(r => r.Email == credentials.Email);
+                    ApplicationUser appUser = _userManager.Users.SingleOrDefault(r => r.Email == credentials.Email);
                     JWTToken jwt = new JWTToken {
                         Token = await GenerateJwtToken(credentials.Email, appUser),
                     };
@@ -127,7 +127,7 @@ namespace dotnet_core_identity_sandbox.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await _userManager.FindByEmailAsync(credentials.Email);
+                ApplicationUser user = await _userManager.FindByEmailAsync(credentials.Email);
                 if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
                 {
                     // Don't reveal that the user does not exist or is not confirmed
@@ -136,8 +136,8 @@ namespace dotnet_core_identity_sandbox.Controllers
 
                 // For more information on how to enable account confirmation and password reset please 
                 // visit https://go.microsoft.com/fwlink/?LinkID=532713
-                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-                var callbackUrl = Url.Page(
+                string code = await _userManager.GeneratePasswordResetTokenAsync(user);
+                string callbackUrl = Url.Page(
                     "/Account/ResetPassword",
                     pageHandler: null,
                     values: new { area = "Identity", code },
@@ -165,7 +165,7 @@ namespace dotnet_core_identity_sandbox.Controllers
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtKey"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var expires = DateTime.Now.AddDays(Convert.ToDouble(_configuration["JwtExpireDays"]));
+            DateTime expires = DateTime.Now.AddDays(Convert.ToDouble(_configuration["JwtExpireDays"]));
 
             var token = new JwtSecurityToken(
                 _configuration["JwtIssuer"],
