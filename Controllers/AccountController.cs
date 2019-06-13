@@ -1,12 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 using System.Text.Encodings.Web;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +21,6 @@ namespace dotnet_core_identity_sandbox.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<AccountController> _logger;
-        private readonly IPasswordHasher<ApplicationUser> _passwordHasher;
         private readonly IEmailSender _emailSender;
         private readonly IConfiguration _configuration;
 
@@ -35,14 +28,12 @@ namespace dotnet_core_identity_sandbox.Controllers
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<AccountController> logger,
-            IPasswordHasher<ApplicationUser> passwordHasher,
             IEmailSender emailSender,
             IConfiguration configuration)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
-            _passwordHasher = passwordHasher;
             _emailSender = emailSender;
             _configuration = configuration;
         }
