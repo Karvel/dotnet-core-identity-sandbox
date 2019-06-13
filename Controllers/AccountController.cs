@@ -104,7 +104,7 @@ namespace dotnet_core_identity_sandbox.Controllers
                 {
                     var appUser = _userManager.Users.SingleOrDefault(r => r.Email == credentials.Email);
                     JWTToken jwt = new JWTToken {
-                        Token = GenerateJwtToken(credentials.Email, appUser),
+                        Token = await GenerateJwtToken(credentials.Email, appUser),
                     };
                     return Ok(jwt);
                 }
@@ -154,7 +154,7 @@ namespace dotnet_core_identity_sandbox.Controllers
             return BadRequest("Password reset failed.");
         }
 
-        private object GenerateJwtToken(string email, IdentityUser user)
+        private async Task<object> GenerateJwtToken(string email, IdentityUser user)
         {
             var claims = new List<Claim>
             {
