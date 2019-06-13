@@ -69,6 +69,7 @@ namespace dotnet_core_identity_sandbox.Controllers
 
                     SessionViewModel response = new SessionViewModel {
                         User = new UserViewModel{
+                            ID = user.Id,
                             FirstName = user.FirstName,
                             LastName = user.LastName,
                             Email = user.Email,
@@ -102,6 +103,7 @@ namespace dotnet_core_identity_sandbox.Controllers
                     ApplicationUser appUser = _userManager.Users.SingleOrDefault(user => user.Email == credentials.Email);
                     SessionViewModel response = new SessionViewModel {
                         User = new UserViewModel{
+                            ID = appUser.Id,
                             FirstName = appUser.FirstName,
                             LastName = appUser.LastName,
                             Email = appUser.Email,
