@@ -51,18 +51,18 @@ namespace dotnet_core_identity_sandbox.Controllers
         {  
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = credentials.Email, Email = credentials.Email };
-                var result =  await _userManager.CreateAsync(user, credentials.Password);
+                var newUser = new ApplicationUser { UserName = credentials.Email, Email = credentials.Email };
+                var result =  await _userManager.CreateAsync(newUser, credentials.Password);
                 
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
 
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
                     var callbackUrl = Url.Page(
                         "/Account/ConfirmEmail",
                         pageHandler: null,
-                        values: new { area = "Identity", userId = user.Id, code = code },
+                        values: new { area = "Identity", userId = newUser.Id, code = code },
                         protocol: Request.Scheme);
 
                     await _emailSender.SendEmailAsync(credentials.Email, "Confirm your email",

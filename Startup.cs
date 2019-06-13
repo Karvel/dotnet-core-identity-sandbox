@@ -48,7 +48,6 @@ namespace dotnet_core_identity_sandbox
 				   options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
 				   options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 				   options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-
 			   })
 			   .AddJwtBearer(cfg =>
 			   {
