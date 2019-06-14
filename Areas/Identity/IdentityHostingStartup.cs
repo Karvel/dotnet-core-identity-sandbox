@@ -18,8 +18,7 @@ namespace dotnet_core_identity_sandbox.Areas.Identity
                     options.UseSqlServer(
                         context.Configuration.GetConnectionString("IdentityDataContextConnection")));
 
-                services.AddDefaultIdentity<ApplicationUser>()
-                    .AddRoles<IdentityRole>()
+                services.AddIdentity<ApplicationUser, IdentityRole>()
                     .AddEntityFrameworkStores<IdentityDataContext>();
             });
         }

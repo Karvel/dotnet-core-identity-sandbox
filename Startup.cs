@@ -59,7 +59,15 @@ namespace dotnet_core_identity_sandbox
 				});
             services.Configure<AuthMessageSenderOptions>(Configuration);
 			services.AddScoped<AccountManager>();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+				.AddRazorPagesOptions(options =>
+				{
+					options.AllowAreas = true;
+					options.Conventions.AuthorizeAreaPage("Identity", "/Account/ForgotPassword");
+					options.Conventions.AuthorizeAreaPage("Identity", "/Account/ForgotPasswordConfirmation");
+					options.Conventions.AuthorizeAreaPage("Identity", "/Account/ResetPassword");
+					options.Conventions.AuthorizeAreaPage("Identity", "/Account/ResetPasswordConfirmation");
+				});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
